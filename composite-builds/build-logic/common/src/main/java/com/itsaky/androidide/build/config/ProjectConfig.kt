@@ -37,17 +37,6 @@ object ProjectConfig {
 private var shouldPrintNotAGitRepoWarning = true
 private var shouldPrintVersionName = true
 
-/**
- * Whether this build is being executed in the F-Droid build server.
- */
-val Project.isFDroidBuild: Boolean
-  get() {
-    if (!FDroidConfig.hasRead) {
-      FDroidConfig.load(this)
-    }
-    return com.itsaky.androidide.build.config.FDroidConfig.isFDroidBuild
-  }
-
 val Project.simpleVersionName: String
   get() {
 
@@ -107,12 +96,6 @@ val Project.publishingVersion: String
   get() {
 
     var publishing = simpleVersionName
-    if (isFDroidBuild) {
-      // when building for F-Droid, the release is already published so we should have
-      // the maven dependencies already published
-      // simply return the simple version name here.
-      return publishing
-    }
 
     if (CI.isCiBuild && CI.isGitRepo && CI.branchName != "main") {
       publishing += "-${CI.commitHash}-SNAPSHOT"
@@ -125,12 +108,12 @@ val Project.publishingVersion: String
  * The version name which is used to download the artifacts at runtime.
  *
  * The value varies based on the following cases :
- * - For CI and F-Droid builds: same as [publishingVersion].
+ * - For CI builds: same as [publishingVersion].
  * - For local builds: `latest.integration` to make sure that Gradle downloads the latest snapshots.
  */
 val Project.downloadVersion: String
   get() {
-    return if (CI.isCiBuild || isFDroidBuild) {
+    return if (CI.isCiBuild) {
       publishingVersion
     } else {
       // sometimes, when working locally, Gradle fails to download the latest snapshot version

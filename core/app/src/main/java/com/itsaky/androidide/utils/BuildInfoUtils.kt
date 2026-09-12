@@ -42,9 +42,6 @@ object BuildInfoUtils {
       "Commit" to BuildInfo.CI_GIT_COMMIT_HASH,
       "Variant" to "${IDEBuildConfigProvider.getInstance().cpuAbiName} (${BuildConfig.BUILD_TYPE})",
       "Build type" to getBuildType(),
-      "F-Droid Build" to BuildInfo.FDROID_BUILD,
-      "F-Droid Version" to BuildInfo.FDROID_BUILD_VERSION_NAME,
-      "F-Droid Version code" to BuildInfo.FDROID_BUILD_VERSION_CODE,
       "SDK Version" to Build.VERSION.SDK_INT,
       "Supported ABIs" to "[${Build.SUPPORTED_ABIS.joinToString(separator = ", ")}]",
       "Manufacturer" to DeviceUtils.getManufacturer(),
@@ -76,6 +73,5 @@ object BuildInfoUtils {
     val signer = TermuxUtils.getAPKRelease(sha256DigestForPackage)
 
     return TermuxConstants.APK_RELEASE_ANDROIDIDE == signer
-        || TermuxConstants.APK_RELEASE_FDROID == signer
   }
 }
